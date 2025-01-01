@@ -1,0 +1,101 @@
+{
+  "TOPICS": [
+    {
+      "main-topic": "Education",
+      "subtopic": "Société",
+      "sub-subtopic": "Loisirs"
+    },
+    {
+      "main-topic": "Education",
+      "subtopic": "Société",
+      "sub-subtopic": "Citoyenneté & Religion"
+    },
+    {
+      "main-topic": "Education",
+      "subtopic": "Conspi",
+      "sub-subtopic": "Théories Conspiratives"
+    },
+    {
+      "main-topic": "Education",
+      "subtopic": "Lettres",
+      "sub-subtopic": "Français & Littérature"
+    },
+    {
+      "main-topic": "Education",
+      "subtopic": "Logique",
+      "sub-subtopic": "Enigme"
+    },
+    {
+      "main-topic": "Education",
+      "subtopic": "Logique",
+      "sub-subtopic": "Sciences Physiques & Technologie"
+    },
+    {
+      "main-topic": "Education",
+      "subtopic": "Logique",
+      "sub-subtopic": "Mathématiques"
+    },
+    {
+      "main-topic": "Education",
+      "subtopic": "Nature",
+      "sub-subtopic": "Sciences de la Nature & Animaux"
+    },
+    {
+      "main-topic": "Education",
+      "subtopic": "Histoire-Géo",
+      "sub-subtopic": "Histoire"
+    },
+    {
+      "main-topic": "Education",
+      "subtopic": "Histoire-Géo",
+      "sub-subtopic": "Géographie"
+    },
+    {
+      "main-topic": "Challenges",
+      "subtopic": "Action",
+      "sub-subtopic": "Danse"
+    },
+    {
+      "main-topic": "Challenges",
+      "subtopic": "Action",
+      "sub-subtopic": "Imitation"
+    }
+  ],
+  "LEVELS": [
+    {
+      "main-level": 1,
+      "sublevel": "Primaire",
+      "sub-sublevel": "CP"
+    },
+    {
+      "main-level": 1,
+      "sublevel": "Primaire",
+      "sub-sublevel": "CE1 & CE2"
+    },
+    {
+      "main-level": 1,
+      "sublevel": "Primaire",
+      "sub-sublevel": "CM1 & CM2"
+    },
+    {
+      "main-level": 2,
+      "sublevel": "Secondaire",
+      "sub-sublevel": "Collège"
+    },
+    {
+      "main-level": 2,
+      "sublevel": "Secondaire",
+      "sub-sublevel": "Lycée"
+    },
+    {
+      "main-level": 3,
+      "sublevel": "Universitaire",
+      "sub-sublevel": "Adulte"
+    },
+    {
+      "main-level": 3,
+      "sublevel": "Universitaire",
+      "sub-sublevel": "Savant"
+    }
+  ]
+}
