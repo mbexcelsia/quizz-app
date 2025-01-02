@@ -1,5 +1,6 @@
 {
   "name": "react-typescript",
+  "homepage": "https://mbexcelsia.github.io/quizz-app",
   "version": "1.0.0",
   "description": "React and TypeScript example starter project",
   "keywords": [
@@ -9,17 +10,21 @@
   ],
   "main": "src/index.tsx",
   "dependencies": {
+    "@firebase/auth": "1.8.1",
+    "@firebase/firestore": "4.7.5",
+    "firebase": "11.1.0",
+    "idb": "8.0.1",
     "loader-utils": "3.2.1",
+    "lucide-react": "0.468.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-scripts": "5.0.1",
-    "lucide-react": "0.468.0",
-    "@firebase/firestore": "4.7.5",
-    "@firebase/auth": "1.8.1",
-    "firebase": "11.1.0",
-    "idb": "8.0.1"
+    "recharts": "^2.15.0",
+    "tailwindcss": "^3.4.17",
+    "ui": "shadcn/ui"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/react": "18.2.38",
     "@types/react-dom": "18.2.15",
     "typescript": "4.4.4"
@@ -28,7 +33,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:gh-pages": "PUBLIC_URL=/quizz-app react-scripts build"
   },
   "browserslist": [
     ">0.2%",
