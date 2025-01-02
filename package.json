@@ -6,7 +6,7 @@
   "keywords": [
     "typescript",
     "react",
-    "starter"
+    "starter" 
   ],
   "main": "src/index.tsx",
   "dependencies": {
