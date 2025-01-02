@@ -37,3 +37,4 @@ jobs:
           publish_dir: ./build
           enable_jekyll: false
           force_orphan: true
+          cname: mbexcelsia.github.io

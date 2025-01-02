@@ -34,7 +34,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "build:gh-pages": "PUBLIC_URL=/quizz-app react-scripts build"
+    "build:gh-pages": "CI=false PUBLIC_URL=/quizz-app react-scripts build"
   },
   "browserslist": [
     ">0.2%",
