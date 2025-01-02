@@ -37,4 +37,5 @@ jobs:
           publish_dir: ./build
           enable_jekyll: false
           force_orphan: true
-          cname: mbexcelsia.github.io
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
