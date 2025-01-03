@@ -1,8 +1,14 @@
 import { auth } from "./config/firebase";
-console.log("Firebase Auth initialized:", !!auth);
 import { dataService } from "./services/dataService";
 import "./styles.css";
-import React, { useState, useEffect, useRef } from "react";
+import AdminPanel from "./components/admin/AdminPanel";
+import AuthManager from "./components/auth/AuthManager";
+import SelectionDisplay from "./components/settings/SelectionDisplay";
+import SettingsButton from "./components/settings/SettingsButton";
+import StatsPanel from "./components/stats/StatsPanel";
+import { useAuth } from "./contexts/AuthContext";
+import useResizable from "./hooks/useResizable";
+import { playerService } from "./services/playerService";
 import {
   RotateCcw,
   Dice1,
@@ -11,13 +17,9 @@ import {
   UserCircle,
   Save,
 } from "lucide-react";
-import useResizable from "./hooks/useResizable";
-import { useAuth } from "./contexts/AuthContext";
-import AuthManager from "./components/auth/AuthManager";
-import { playerService } from "./services/playerService";
-import SettingsButton from "./components/settings/SettingsButton";
-import AdminPanel from "./components/admin/AdminPanel";
-import StatsPanel from "./components/stats/StatsPanel";
+import React, { useState, useEffect, useRef } from "react";
+
+console.log("Firebase Auth initialized:", !!auth);
 
 interface Question {
   id: number;
@@ -526,6 +528,10 @@ const QuizApp: React.FC = () => {
                 </option>
               ))}
             </select>
+            <SelectionDisplay
+              selections={selectedMainTopics}
+              className="selection-display-mobile"
+            />
           </div>
 
           <div className="select-container">
@@ -550,6 +556,10 @@ const QuizApp: React.FC = () => {
                 </option>
               ))}
             </select>
+            <SelectionDisplay
+              selections={selectedSubTopics}
+              className="selection-display-mobile"
+            />
           </div>
 
           <div className="select-container">
@@ -574,6 +584,10 @@ const QuizApp: React.FC = () => {
                 </option>
               ))}
             </select>
+            <SelectionDisplay
+              selections={selectedSubSubTopics}
+              className="selection-display-mobile"
+            />
           </div>
         </div>
 
@@ -610,8 +624,11 @@ const QuizApp: React.FC = () => {
                 </option>
               ))}
             </select>
+            <SelectionDisplay
+              selections={selectedMainLevels.map(String)}
+              className="selection-display-mobile"
+            />
           </div>
-
           <div className="select-container">
             <label className="select-label">
               Sous-niveaux <ChevronDown size={14} className="inline ml-1" />
@@ -634,6 +651,10 @@ const QuizApp: React.FC = () => {
                 </option>
               ))}
             </select>
+            <SelectionDisplay
+              selections={selectedSubLevels}
+              className="selection-display-mobile"
+            />
           </div>
 
           <div className="select-container">
@@ -659,12 +680,18 @@ const QuizApp: React.FC = () => {
                 </option>
               ))}
             </select>
+            <SelectionDisplay
+              selections={selectedSubSubLevels}
+              className="selection-display-mobile"
+            />
           </div>
         </div>
       </div>
 
       <div className="section">
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-8">
+          {" "}
+          {/* Changé de space-y-4 à space-y-8 */}
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-medium">Joueurs</h3>
             {currentUser && hasUnsavedChanges && (
@@ -703,10 +730,7 @@ const QuizApp: React.FC = () => {
           {questionsData.length > 0 &&
             structureData.TOPICS.length > 0 &&
             structureData.LEVELS.length > 0 && (
-              <button
-                onClick={getRandomQuestion}
-                className="question-random-button"
-              >
+              <button onClick={getRandomQuestion} className="random-button">
                 <Dice1 className="w-4 h-4" />
                 <span>Question Aléatoire</span>
               </button>
@@ -762,14 +786,14 @@ const QuizApp: React.FC = () => {
                           className="validation-button-success"
                           disabled={isValidated}
                         >
-                          Validé ✓
+                          Validé ?
                         </button>
                         <button
                           onClick={() => handleAnswerValidation(false)}
                           className="validation-button-danger"
                           disabled={isValidated}
                         >
-                          Non validé ✗
+                          Non validé ?
                         </button>
                       </div>
 
@@ -795,6 +819,17 @@ const QuizApp: React.FC = () => {
                           className="mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
                         >
                           CLEAR ALL
+                        </button>
+                      </div>
+                      <hr className="my-6 border-t border-gray-200" />
+                      <div className="mt-12 text-center">
+                        {" "}
+                        {/* Changé de mt-6 à mt-12 */}
+                        <button
+                          onClick={() => setShowAnswer(false)}
+                          className="answer-button"
+                        >
+                          Masquer la réponse
                         </button>
                       </div>
                     </div>

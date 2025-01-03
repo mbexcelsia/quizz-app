@@ -3,6 +3,8 @@
   --primary: #4361ee;
   --primary-light: #4895ef;
   --primary-dark: #3a0ca3;
+  --primary-50: #eff6ff; /* Nouvelle couleur pour les tags */
+  --primary-700: #1d4ed8; /* Nouvelle couleur pour les tags */
   --secondary: #2b2d42;
   --accent: #48cae4;
   --success: #52b788;
@@ -124,30 +126,25 @@ body {
 }
 
 .random-button {
-  background: linear-gradient(
-    135deg,
-    var(--primary) 0%,
-    var(--primary-light) 100%
-  );
+  background: var(--accent);
   color: white;
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: var(--radius-md);
   font-weight: 600;
-  font-size: 1.1rem;
   cursor: pointer;
   transition: all var(--transition-normal);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  margin-top: var(--spacing-lg);
 }
 
 .random-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .answer-button {
@@ -167,6 +164,7 @@ body {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
+
 .validation-button-success {
   background: var(--success);
   color: white;
@@ -177,8 +175,9 @@ body {
   cursor: pointer;
   transition: all var(--transition-normal);
 }
+
 .validation-button-success:disabled {
-  background: #d1d5db; /* Gris clair */
+  background: #d1d5db;
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -193,8 +192,9 @@ body {
   cursor: pointer;
   transition: all var(--transition-normal);
 }
+
 .validation-button-danger:disabled {
-  background: #d1d5db; /* Gris clair */
+  background: #d1d5db;
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -212,6 +212,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl); /* Ajout */
 }
 
 .player-option {
@@ -263,6 +264,8 @@ select.resize-select {
   transition: all var(--transition-normal);
   min-height: 150px;
   resize: vertical;
+  position: relative;
+  z-index: 1;
 }
 
 select.resize-select:focus {
@@ -302,26 +305,6 @@ select.resize-select option:checked {
   font-weight: 700;
   color: var(--primary-dark);
   margin: 0;
-}
-
-.question-random-button {
-  background: var(--primary);
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all var(--transition-normal);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: var(--spacing-md);
-}
-
-.question-random-button:hover {
-  background: var(--primary-light);
 }
 
 .timer {
@@ -371,15 +354,71 @@ select.resize-select option:checked {
   border-top: 1px solid var(--border);
 }
 
-/* Responsive Design */
+/* Settings Menu */
+.settings-button {
+  position: relative;
+  margin-right: var(--spacing-md);
+}
+
+.settings-menu {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.settings-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--text-primary);
+  transition: background-color var(--transition-fast);
+}
+
+.settings-menu-item:hover {
+  background-color: var(--bg-main);
+}
+
+.settings-menu-item.admin {
+  color: var(--primary);
+}
+
+.save-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  background-color: var(--success);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.save-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design - Desktop */
 @media (min-width: 768px) {
   .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
+
+  .selection-display-mobile {
+    display: none;
+  }
 }
 
+/* Responsive Design - Mobile */
 @media (max-width: 767px) {
   .container {
     padding: var(--spacing-sm);
@@ -398,14 +437,11 @@ select.resize-select option:checked {
 
   .player-name-input {
     padding: var(--spacing-sm) var(--spacing-md);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-full);
-    font-size: 0.95rem;
-    transition: all var(--transition-normal);
     background-color: var(--bg-main);
     min-width: 150px;
     cursor: pointer;
   }
+
   .player-active {
     border-color: var(--primary);
     background-color: var(--primary-light);
@@ -420,52 +456,42 @@ select.resize-select option:checked {
   .random-button {
     width: 100%;
   }
-  /* Settings Menu */
-  .settings-button {
-    position: relative;
-    margin-right: var(--spacing-md);
+
+  /* Nouveaux styles pour les selects sur mobile */
+  select.resize-select {
+    min-height: 45px;
+    max-height: 45px;
+    overflow-y: hidden;
   }
 
-  .settings-menu {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-light);
+  select.resize-select:focus {
+    max-height: 80vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    z-index: 1000;
+    background: white;
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
-    border-radius: var(--radius-md);
-    overflow: hidden;
   }
 
-  .settings-menu-item {
-    display: flex;
+  .selection-display-mobile {
+    display: block;
+    margin-top: var(--spacing-sm);
+  }
+
+  /* Style pour les tags de sélection */
+  .selection-tag {
+    display: inline-flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-md);
-    color: var(--text-primary);
-    transition: background-color var(--transition-fast);
-  }
-
-  .settings-menu-item:hover {
-    background-color: var(--bg-main);
-  }
-
-  .settings-menu-item.admin {
-    color: var(--primary);
-  }
-  .save-button {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-md);
-    background-color: var(--success);
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-  }
-
-  .save-button:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    margin: 2px;
+    background-color: var(--primary-50);
+    color: var(--primary-700);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 }
