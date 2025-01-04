@@ -88,6 +88,7 @@ const QuizApp: React.FC = () => {
   const { currentUser, userData } = useAuth();
   const [showStatsModal, setShowStatsModal] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [namesEditable, setNamesEditable] = useState<boolean>(false);
 
   const [players, setPlayers] = useState<PlayerData[]>([
     {
@@ -689,11 +690,10 @@ const QuizApp: React.FC = () => {
       </div>
 
       <div className="section">
-        <div className="flex flex-col space-y-8">
-          {" "}
-          {/* Changé de space-y-4 à space-y-8 */}
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Joueurs</h3>
+        <div>
+          {/* En-tête avec le titre */}
+          <div className="flex justify-between items-start">
+            <h3 className="text-lg font-medium mb-4">Joueurs</h3>
             {currentUser && hasUnsavedChanges && (
               <button onClick={savePlayerData} className="save-button">
                 <Save size={18} />
@@ -701,6 +701,23 @@ const QuizApp: React.FC = () => {
               </button>
             )}
           </div>
+
+          {/* Case à cocher séparée */}
+          <div className="mb-8">
+            <label className="flex items-center gap-2 text-sm text-gray-600">
+              <input
+                type="checkbox"
+                checked={namesEditable}
+                onChange={(e) => setNamesEditable(e.target.checked)}
+                className="form-checkbox h-4 w-4 text-primary rounded border-gray-300"
+              />
+              Noms modifiables
+            </label>
+            <hr className="border-t border-gray-200 w-full my-4" />{" "}
+            {/* Ajout de la ligne horizontale */}
+          </div>
+
+          {/* Section des joueurs */}
           <div className="players-grid mb-4">
             {players.map((player, index) => (
               <div key={index} className="player-option">
@@ -716,12 +733,14 @@ const QuizApp: React.FC = () => {
                   type="text"
                   value={player.name}
                   onChange={(e) =>
+                    namesEditable &&
                     handlePlayerNameChange(index, e.target.value)
                   }
                   className={`player-name-input ${
                     selectedPlayerIndex === index ? "player-active" : ""
-                  }`}
+                  } ${!namesEditable ? "cursor-pointer" : "cursor-text"}`}
                   onClick={() => setSelectedPlayerIndex(index)}
+                  readOnly={!namesEditable}
                   aria-label={`Nom du joueur ${index + 1}`}
                 />
               </div>
