@@ -374,6 +374,22 @@ const QuizApp: React.FC = () => {
     setPlayers(updatedPlayers);
     setHasUnsavedChanges(true);
   };
+
+  const handlePlayerSelection = (index: number) => {
+    if (selectedPlayerIndex !== index) {
+      // Si une question est en cours avec chronomètre actif
+      if (randomQuestion && timerRunning) {
+        setShowAnswer(true); // Force l'affichage de la réponse
+        setTimerRunning(false); // Arrête le chronomètre
+        setIsValidated(false); // Réinitialise la validation
+      }
+
+      // Réinitialiser la question
+      setRandomQuestion(null); // Ajouter cette ligne pour réinitialiser la question
+
+      setSelectedPlayerIndex(index);
+    }
+  };
   const renderAuthButton = () => {
     if (currentUser) {
       return (
@@ -726,7 +742,7 @@ const QuizApp: React.FC = () => {
                   id={`player-${index}`}
                   name="playerSelect"
                   checked={selectedPlayerIndex === index}
-                  onChange={() => setSelectedPlayerIndex(index)}
+                  onChange={() => handlePlayerSelection(index)}
                   className="hidden"
                 />
                 <input
@@ -737,9 +753,11 @@ const QuizApp: React.FC = () => {
                     handlePlayerNameChange(index, e.target.value)
                   }
                   className={`player-name-input ${
-                    selectedPlayerIndex === index ? "player-active" : ""
+                    selectedPlayerIndex === index
+                      ? `player-${index + 1}-active`
+                      : ""
                   } ${!namesEditable ? "cursor-pointer" : "cursor-text"}`}
-                  onClick={() => setSelectedPlayerIndex(index)}
+                  onClick={() => handlePlayerSelection(index)}
                   readOnly={!namesEditable}
                   aria-label={`Nom du joueur ${index + 1}`}
                 />
@@ -757,7 +775,13 @@ const QuizApp: React.FC = () => {
         </div>
 
         {randomQuestion && (
-          <div className="question-card">
+          <div
+            className={`question-card ${
+              !showAnswer
+                ? `question-card-player-${selectedPlayerIndex + 1}`
+                : ""
+            }`}
+          >
             <div className="question-header">
               <h2 className="question-title">Question</h2>
               {timerRunning && (
@@ -770,8 +794,7 @@ const QuizApp: React.FC = () => {
 
             <div className="question-meta">
               ({randomQuestion["sub-subtopic"]}, niveau{" "}
-              {randomQuestion["sub-sublevel"]}, pour{" "}
-              {players[selectedPlayerIndex].name})
+              {randomQuestion["sub-sublevel"]})
             </div>
 
             <p className="question-text">{randomQuestion.question}</p>
@@ -817,33 +840,91 @@ const QuizApp: React.FC = () => {
                       </div>
 
                       <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                        <h3 className="font-semibold mb-3">SCORES</h3>
-                        <div className="space-y-2">
-                          {players.map((player, index) => (
-                            <div key={player.uid}>
-                              {player.name} : {playerScores[index].correct} (
-                              {playerScores[index].total > 0
-                                ? Math.round(
-                                    (playerScores[index].correct /
-                                      playerScores[index].total) *
-                                      100
-                                  )
-                                : 0}
-                              %)
-                            </div>
-                          ))}
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="text-xl font-bold">
+                            Tableau des Scores
+                          </h3>
+                          <button
+                            onClick={clearScores}
+                            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+                          >
+                            Réinitialiser les scores
+                          </button>
                         </div>
-                        <button
-                          onClick={clearScores}
-                          className="mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-                        >
-                          CLEAR ALL
-                        </button>
+                        <div className="overflow-x-auto scores-container">
+                          <table className="w-full bg-white scores-table">
+                            <thead className="bg-gray-100 border-b-2 border-gray-200">
+                              <tr>
+                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                  Joueur
+                                </th>
+                                <th className="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                  Score
+                                </th>
+                                <th className="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                  Total
+                                </th>
+                                <th className="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                  Pourcentage
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                              {players.map((player, index) => (
+                                <tr
+                                  key={player.uid}
+                                  className="hover:bg-gray-50 transition-colors"
+                                >
+                                  <td className="px-6 py-4">
+                                    <div
+                                      className="w-full h-full"
+                                      style={{
+                                        backgroundColor: `${
+                                          index === 0
+                                            ? "rgba(255, 183, 3, 0.1)"
+                                            : `var(--player-${
+                                                index + 1
+                                              }-color-light)`
+                                        }`,
+                                        borderLeft: `4px solid var(--player-${
+                                          index + 1
+                                        }-color)`,
+                                        padding: "0.5rem",
+                                        fontWeight: "600",
+                                      }}
+                                    >
+                                      {player.name}
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 text-center">
+                                    <span className="score-column">
+                                      {playerScores[index].correct}
+                                    </span>
+                                  </td>
+
+                                  <td className="px-6 py-4 text-center text-gray-600">
+                                    {playerScores[index].total}
+                                  </td>
+                                  <td className="px-6 py-4 text-center">
+                                    <span className="font-medium">
+                                      {playerScores[index].total > 0
+                                        ? Math.round(
+                                            (playerScores[index].correct /
+                                              playerScores[index].total) *
+                                              100
+                                          )
+                                        : 0}
+                                      %
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
                       <hr className="my-6 border-t border-gray-200" />
                       <div className="mt-12 text-center">
-                        {" "}
-                        {/* Changé de mt-6 à mt-12 */}
                         <button
                           onClick={() => setShowAnswer(false)}
                           className="answer-button"
