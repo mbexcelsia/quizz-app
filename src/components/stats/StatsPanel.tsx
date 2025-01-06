@@ -1,7 +1,8 @@
 // src/components/stats/StatsPanel.tsx
-import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
+
 import { dataService } from "../../services/dataService";
+import { X } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 interface Question {
   id: number;
@@ -176,16 +177,22 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ onClose }) => {
       <div className="space-y-8">
         <div>
           <h2 className="text-xl font-semibold mb-4">Répartition par thème</h2>
-          {renderStatsTable(mainTopicsStats, "Thèmes principaux")}
-          {renderStatsTable(subtopicsStats, "Sous-thèmes")}
-          {renderStatsTable(subSubtopicsStats, "Sous-sous-thèmes")}
+          <hr />
+          {renderStatsTable(mainTopicsStats, "*** Thèmes principaux ***")}
+          <hr />
+          {renderStatsTable(subtopicsStats, "*** Sous-thèmes ***")}
+          <hr />
+          {renderStatsTable(subSubtopicsStats, "*** Sous-sous-thèmes ***")}
         </div>
 
         <div>
           <h2 className="text-xl font-semibold mb-4">Répartition par niveau</h2>
-          {renderStatsTable(mainLevelsStats, "Niveaux principaux")}
-          {renderStatsTable(sublevelsStats, "Sous-niveaux")}
-          {renderStatsTable(subSublevelsStats, "Sous-sous-niveaux")}
+          <hr />
+          {renderStatsTable(mainLevelsStats, "*** Niveaux principaux ***")}
+          <hr />
+          {renderStatsTable(sublevelsStats, "*** Sous-niveaux ***")}
+          <hr />
+          {renderStatsTable(subSublevelsStats, "*** Sous-sous-niveaux ***")}
         </div>
       </div>
     </div>

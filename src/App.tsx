@@ -90,6 +90,10 @@ const QuizApp: React.FC = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [namesEditable, setNamesEditable] = useState<boolean>(false);
 
+  const questionCardRef = useRef<HTMLDivElement>(null);
+  const answerSectionRef = useRef<HTMLDivElement>(null);
+  const playersGridRef = useRef<HTMLDivElement>(null);
+
   const [players, setPlayers] = useState<PlayerData[]>([
     {
       uid: `player-1-${Date.now()}`,
@@ -441,6 +445,10 @@ const QuizApp: React.FC = () => {
       setShowAnswer(false);
       setTime(0);
       setTimerRunning(true);
+      // Ajout du scroll
+      setTimeout(() => {
+        questionCardRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
     } else {
       alert("Aucune question ne correspond aux critères sélectionnés");
     }
@@ -470,8 +478,17 @@ const QuizApp: React.FC = () => {
 
   return (
     <div className="container">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="quiz-title mb-0">Quiz Educatif</h1>
+      <div className="flex justify-between items-center">
+        {" "}
+        {/* Retrait de mb-6 car géré par header-container */}
+        <div className="header-container">
+          <img
+            src={`${process.env.PUBLIC_URL}/icons/app-logo.png`}
+            alt="Quiz Educatif Logo"
+            className="header-logo"
+          />
+          <h1 className="quiz-title">Quiz Éducatif</h1>
+        </div>
         <div className="flex items-center gap-2">
           <SettingsButton
             onAdminClick={() => {
@@ -486,7 +503,6 @@ const QuizApp: React.FC = () => {
           {renderAuthButton()}
         </div>
       </div>
-
       {showAuthModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
@@ -734,7 +750,7 @@ const QuizApp: React.FC = () => {
           </div>
 
           {/* Section des joueurs */}
-          <div className="players-grid mb-4">
+          <div className="players-grid mb-4" ref={playersGridRef}>
             {players.map((player, index) => (
               <div key={index} className="player-option">
                 <input
@@ -781,6 +797,7 @@ const QuizApp: React.FC = () => {
                 ? `question-card-player-${selectedPlayerIndex + 1}`
                 : ""
             }`}
+            ref={questionCardRef}
           >
             <div className="question-header">
               <h2 className="question-title">Question</h2>
@@ -805,6 +822,17 @@ const QuizApp: React.FC = () => {
                 if (!showAnswer) {
                   setTimerRunning(false);
                   setIsValidated(false);
+                  setTimeout(() => {
+                    answerSectionRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                  }, 100);
+                } else {
+                  setTimeout(() => {
+                    playersGridRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                  }, 100);
                 }
               }}
               className="answer-button"
@@ -813,7 +841,7 @@ const QuizApp: React.FC = () => {
             </button>
 
             {showAnswer && (
-              <div className="answer-section">
+              <div className="answer-section" ref={answerSectionRef}>
                 <div className="answer-content">
                   <h3 className="answer-title">Réponse</h3>
                   <p>{randomQuestion.answer}</p>
@@ -851,21 +879,27 @@ const QuizApp: React.FC = () => {
                             Réinitialiser les scores
                           </button>
                         </div>
+                        {/* Ajouter un div pour le saut de ligne */}
+                        <div className="mb-4">&nbsp;</div>
                         <div className="overflow-x-auto scores-container">
                           <table className="w-full bg-white scores-table">
                             <thead className="bg-gray-100 border-b-2 border-gray-200">
                               <tr>
-                                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                {/* Colonne Joueur - réduite sur mobile */}
+                                <th className="px-2 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wider">
                                   Joueur
                                 </th>
-                                <th className="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                {/* Colonne Score - réduite sur mobile */}
+                                <th className="px-2 md:px-6 py-2 md:py-3 text-center text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wider">
                                   Score
                                 </th>
-                                <th className="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                {/* Total - caché sur mobile */}
+                                <th className="hidden md:table-cell px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
                                   Total
                                 </th>
-                                <th className="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                                  Pourcentage
+                                {/* Pourcentage - caché sur mobile */}
+                                <th className="hidden md:table-cell px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                                  %
                                 </th>
                               </tr>
                             </thead>
@@ -875,7 +909,8 @@ const QuizApp: React.FC = () => {
                                   key={player.uid}
                                   className="hover:bg-gray-50 transition-colors"
                                 >
-                                  <td className="px-6 py-4">
+                                  {/* Colonne Joueur - réduite sur mobile */}
+                                  <td className="px-2 md:px-6 py-2 md:py-4">
                                     <div
                                       className="w-full h-full"
                                       style={{
@@ -896,16 +931,18 @@ const QuizApp: React.FC = () => {
                                       {player.name}
                                     </div>
                                   </td>
-                                  <td className="px-6 py-4 text-center">
+                                  {/* Colonne Score - réduite sur mobile */}
+                                  <td className="px-2 md:px-6 py-2 md:py-4 text-center">
                                     <span className="score-column">
                                       {playerScores[index].correct}
                                     </span>
                                   </td>
-
-                                  <td className="px-6 py-4 text-center text-gray-600">
+                                  {/* Total - caché sur mobile */}
+                                  <td className="hidden md:table-cell px-6 py-4 text-center text-gray-600">
                                     {playerScores[index].total}
                                   </td>
-                                  <td className="px-6 py-4 text-center">
+                                  {/* Pourcentage - caché sur mobile */}
+                                  <td className="hidden md:table-cell px-6 py-4 text-center">
                                     <span className="font-medium">
                                       {playerScores[index].total > 0
                                         ? Math.round(

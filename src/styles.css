@@ -78,15 +78,31 @@ body {
   padding: var(--spacing-lg);
 }
 
+/* En-tête avec logo */
+.header-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+/* Nouvelle classe pour le conteneur titre+logo */
+/* Modifier dans styles.css */
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: var(--spacing-md);
+  border-bottom: 3px solid var(--primary-light);
+  margin-bottom: var(--spacing-xl); /* Ajout de la marge en bas */
+}
+
 /* Titre principal */
 .quiz-title {
   font-size: 2.5rem;
   font-weight: 800;
   color: var(--primary-dark);
-  text-align: center;
-  margin-bottom: var(--spacing-xl);
-  padding-bottom: var(--spacing-md);
-  border-bottom: 3px solid var(--primary-light);
+  margin: 0; /* Retirer margin-bottom et padding-bottom */
+  border-bottom: none; /* Retirer la bordure du titre */
 }
 
 /* Sections principales */
@@ -474,14 +490,12 @@ select.resize-select option:checked {
 }
 /* Styles pour le tableau des scores */
 .scores-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  width: 100%;
+  font-size: 0.75rem; /* Réduction générale de la taille du texte */
 }
 
 .scores-table th,
 .scores-table td {
-  border: 1px solid var(--border);
+  padding: 0.25rem !important; /* Réduction forcée du padding */
 }
 
 .scores-table thead th {
@@ -501,7 +515,13 @@ select.resize-select option:checked {
   text-align: center;
 }
 .scores-table td:first-child {
-  text-align: middle;
+  max-width: 80px; /* Largeur maximale pour la colonne joueur */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.scores-table td:first-child div {
+  padding: 0.25rem !important; /* Réduction du padding pour la div du nom */
 }
 
 .scores-table tbody tr:hover {
@@ -509,8 +529,20 @@ select.resize-select option:checked {
 }
 
 .scores-table .score-column {
-  font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 0.875rem; /* Taille de police réduite pour les scores */
+}
+
+/* Masquer uniquement la colonne Total sur mobile */
+.scores-table th:nth-child(3),
+.scores-table td:nth-child(3) {
+  display: none;
+}
+
+/* Ajuster la taille de la colonne pourcentage */
+.scores-table th:nth-child(4),
+.scores-table td:nth-child(4) {
+  font-size: 0.75rem;
+  padding: 0.25rem !important;
 }
 
 /* Style pour l'encadrement extérieur du tableau */
@@ -520,6 +552,12 @@ select.resize-select option:checked {
   overflow: hidden;
   box-shadow: var(--shadow-md);
   background: white;
+}
+
+.app-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 /* Responsive Design - Desktop */
