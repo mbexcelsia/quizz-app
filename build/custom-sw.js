@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var CACHE_NAME = "quiz-educatif-v3";
 var ASSETS_TO_CACHE = [
     "/quizz-app/",
@@ -11,13 +9,13 @@ var ASSETS_TO_CACHE = [
     "/quizz-app/icons/app-logo.png",
 ];
 self.addEventListener("install", function (event) {
-    event.waitUntil(caches.open(CACHE_NAME).then(function (cache) {
-        return cache.addAll(ASSETS_TO_CACHE);
-    }));
-    void self.skipWaiting();
+    event.waitUntil(caches.open(CACHE_NAME).then(function (cache) { return cache.addAll(ASSETS_TO_CACHE); }));
+    self.skipWaiting();
 });
 self.addEventListener("activate", function (event) {
-    event.waitUntil(caches.keys().then(function (cacheNames) {
+    event.waitUntil(caches
+        .keys()
+        .then(function (cacheNames) {
         return Promise.all(cacheNames
             .filter(function (name) { return name !== CACHE_NAME; })
             .map(function (name) { return caches.delete(name); }));
@@ -33,16 +31,15 @@ self.addEventListener("fetch", function (event) {
         return;
     }
     event.respondWith(caches.match(event.request).then(function (response) {
-        if (response) {
+        if (response)
             return response;
-        }
         return fetch(event.request.clone())
             .then(function (networkResponse) {
             if (!networkResponse || networkResponse.status !== 200) {
                 return networkResponse;
             }
             var responseToCache = networkResponse.clone();
-            void caches.open(CACHE_NAME).then(function (cache) {
+            caches.open(CACHE_NAME).then(function (cache) {
                 cache.put(event.request, responseToCache);
             });
             return networkResponse;

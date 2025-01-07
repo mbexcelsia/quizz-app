@@ -17,21 +17,24 @@ module.exports = function override(config, env) {
           const swSource = path.join(__dirname, "src", "custom-sw.ts");
           const swDest = path.join(__dirname, "build", "custom-sw.js");
 
-          // Lire le contenu source
           const sourceContent = fs.readFileSync(swSource, "utf-8");
-
-          // Compiler
-          const result = ts.transpileModule(sourceContent, {
+          const compiled = ts.transpileModule(sourceContent, {
             compilerOptions: {
               target: ts.ScriptTarget.ES5,
-              module: ts.ModuleKind.CommonJS,
+              module: ts.ModuleKind.None,
               lib: ["webworker", "es2015"],
               removeComments: true,
+              isolatedModules: false,
             },
           });
 
-          // Écrire le résultat
-          fs.writeFileSync(swDest, result.outputText);
+          // Remove exports
+          const cleanOutput = compiled.outputText.replace(
+            '"use strict";\nObject.defineProperty(exports, "__esModule", { value: true });\n',
+            ""
+          );
+
+          fs.writeFileSync(swDest, cleanOutput);
         });
       },
     });
