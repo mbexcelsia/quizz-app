@@ -9,7 +9,9 @@ type Config = {
 export function register(config?: Config) {
   if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      const swUrl = `${process.env.PUBLIC_URL}/custom-sw.js`;
+      const swUrl = `${
+        process.env.REACT_APP_SW_PUBLIC_URL || process.env.PUBLIC_URL
+      }/custom-sw.js`;
       registerValidSW(swUrl, config);
     });
   }

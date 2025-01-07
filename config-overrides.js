@@ -1,35 +1,40 @@
 const path = require("path");
+const ts = require("typescript");
 const fs = require("fs");
 
 module.exports = function override(config, env) {
-  // Désactiver complètement la génération de service worker
-  config.plugins = config.plugins.filter((plugin) => {
-    return (
+  config.plugins = config.plugins.filter(
+    (plugin) =>
       !plugin.constructor ||
-      (plugin.constructor.name !== "GenerateSW" &&
-        plugin.constructor.name !== "InjectManifest")
-    );
-  });
+      !["GenerateSW", "InjectManifest"].includes(plugin.constructor.name)
+  );
 
-  // Ne pas générer de source maps en production
   if (env === "production") {
     config.devtool = false;
-  }
-
-  // Ajouter un plugin pour copier notre service worker
-  if (env === "production") {
     config.plugins.push({
       apply: (compiler) => {
-        compiler.hooks.afterEmit.tap("CopyServiceWorker", () => {
+        compiler.hooks.afterEmit.tap("CompileServiceWorker", () => {
           const swSource = path.join(__dirname, "src", "custom-sw.ts");
           const swDest = path.join(__dirname, "build", "custom-sw.js");
-          if (fs.existsSync(swSource)) {
-            fs.copyFileSync(swSource, swDest);
-          }
+
+          // Lire le contenu source
+          const sourceContent = fs.readFileSync(swSource, "utf-8");
+
+          // Compiler
+          const result = ts.transpileModule(sourceContent, {
+            compilerOptions: {
+              target: ts.ScriptTarget.ES5,
+              module: ts.ModuleKind.CommonJS,
+              lib: ["webworker", "es2015"],
+              removeComments: true,
+            },
+          });
+
+          // Écrire le résultat
+          fs.writeFileSync(swDest, result.outputText);
         });
       },
     });
   }
-
   return config;
 };
