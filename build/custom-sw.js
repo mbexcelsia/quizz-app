@@ -1,12 +1,13 @@
+var BASE_PATH = "/quizz-app/";
 var CACHE_NAME = "quiz-educatif-v3";
 var ASSETS_TO_CACHE = [
-    "/quizz-app/",
-    "/quizz-app/index.html",
-    "/quizz-app/manifest.json",
-    "/quizz-app/icons/favicon.ico",
-    "/quizz-app/icons/logo192.png",
-    "/quizz-app/icons/logo512.png",
-    "/quizz-app/icons/app-logo.png",
+    BASE_PATH,
+    BASE_PATH + "index.html",
+    BASE_PATH + "manifest.json",
+    BASE_PATH + "icons/favicon.ico",
+    BASE_PATH + "icons/logo192.png",
+    BASE_PATH + "icons/logo512.png",
+    BASE_PATH + "icons/app-logo.png",
 ];
 self.addEventListener("install", function (event) {
     event.waitUntil(caches.open(CACHE_NAME).then(function (cache) { return cache.addAll(ASSETS_TO_CACHE); }));
@@ -47,7 +48,7 @@ self.addEventListener("fetch", function (event) {
             .catch(function () {
             if (event.request.mode === "navigate") {
                 return caches
-                    .match("/quizz-app/index.html")
+                    .match(BASE_PATH + "index.html")
                     .then(function (response) { return response || new Response("Application hors ligne"); });
             }
             return new Response("Application hors ligne", {
