@@ -5,17 +5,17 @@
     {
       "src": "/quizz-app/icons/favicon.ico",
       "sizes": "64x64",
-      "type": "image/x-icon"
+      "type": "image/x-icon" 
     },
     {
-      "src": "/quizz-app/icons/logo192.png",
+      "src": "/quizz-app/icons/logo-192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "/quizz-app/icons/logo512.png",
-      "type": "image/png",
+      "src": "/quizz-app/icons/logo-512.png",
+      "type": "image/png", 
       "sizes": "512x512",
       "purpose": "any maskable"
     }
@@ -25,4 +25,4 @@
   "theme_color": "#4361ee",
   "background_color": "#ffffff",
   "orientation": "any"
-}
+ }

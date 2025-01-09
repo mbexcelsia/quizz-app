@@ -5,8 +5,8 @@ var ASSETS_TO_CACHE = [
     BASE_PATH + "index.html",
     BASE_PATH + "manifest.json",
     BASE_PATH + "icons/favicon.ico",
-    BASE_PATH + "icons/logo192.png",
-    BASE_PATH + "icons/logo512.png",
+    BASE_PATH + "icons/logo-192.png",
+    BASE_PATH + "icons/logo-512.png",
     BASE_PATH + "icons/app-logo.png",
 ];
 self.addEventListener("install", function (event) {
