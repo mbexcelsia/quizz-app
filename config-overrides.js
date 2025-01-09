@@ -24,15 +24,20 @@ module.exports = function override(config, env) {
               module: ts.ModuleKind.None,
               lib: ["webworker", "es2015"],
               removeComments: true,
-              isolatedModules: false,
+              isolatedModules: true,
+              skipLibCheck: true,
+              noImplicitAny: false,
             },
           });
 
-          // Remove exports
-          const cleanOutput = compiled.outputText.replace(
-            '"use strict";\nObject.defineProperty(exports, "__esModule", { value: true });\n',
-            ""
-          );
+          // Nettoyage du code TypeScript généré
+          let cleanOutput = compiled.outputText
+            .replace(
+              '"use strict";\nObject.defineProperty(exports, "__esModule", { value: true });\n',
+              ""
+            )
+            .replace(/exports\./g, "")
+            .replace(/var _this = this;/g, "");
 
           fs.writeFileSync(swDest, cleanOutput);
         });
