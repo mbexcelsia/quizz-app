@@ -50,6 +50,9 @@
     "not op_mini all"
   ],
   "resolutions": {
-    "nth-check": "^2.0.1"
+    "nth-check": "^2.0.1",
+    "postcss": "~8.4.31", 
+    "react-scripts/postcss": "~8.4.31",  
+    "tailwindcss/postcss": "~8.4.31"    
   }
 }
