@@ -1,13 +1,14 @@
-// src/components/settings/SettingsMenu.tsx
 import React from "react";
-import { Shield, BarChart2 } from "lucide-react";
+import { Shield, BarChart2, Download } from "lucide-react";
+import InstallButton from "../install/installButton";
 
 interface SettingsMenuProps {
   isAdmin: boolean;
   onClose: () => void;
   onAdminClick: () => void;
-  onStatsClick: () => void; // Ajout de cette prop
+  onStatsClick: () => void;
 }
+
 const SettingsMenu: React.FC<SettingsMenuProps> = ({
   isAdmin,
   onClose,
@@ -27,6 +28,12 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
           <BarChart2 size={16} />
           <span>Statistiques</span>
         </button>
+
+        {/* Bouton d'installation PWA */}
+        <div className="w-full px-4 py-2">
+          <InstallButton />
+        </div>
+
         {isAdmin && (
           <button
             onClick={() => {
