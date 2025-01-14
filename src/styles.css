@@ -136,6 +136,25 @@ body {
   margin: 0;
 }
 
+/* ToggleButton */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-content {
+  transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
+  max-height: 1000px;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.section-collapsed .section-content {
+  max-height: 0;
+  opacity: 0;
+}
+
 /* Boutons */
 .reset-button {
   display: flex;
@@ -229,6 +248,16 @@ body {
   background: #d1d5db;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.validation-buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: var(--bg-main);
+  border-radius: var(--radius-lg);
 }
 
 /* Players section */
@@ -570,6 +599,28 @@ select.resize-select option:checked {
 
   .selection-display-mobile {
     display: none;
+  }
+
+  /* Tableau des scores */
+  .scores-table th:nth-child(3),
+  .scores-table td:nth-child(3) {
+    display: table-cell;
+  }
+
+  .scores-table td:first-child {
+    width: 25%;
+    max-width: none;
+  }
+
+  .scores-table td:nth-child(2),
+  .scores-table td:nth-child(3),
+  .scores-table td:nth-child(4) {
+    width: 25%;
+  }
+
+  .scores-table th,
+  .scores-table td {
+    padding: 1rem !important;
   }
 }
 

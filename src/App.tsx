@@ -3,6 +3,8 @@ import { dataService } from "./services/dataService";
 import "./styles.css";
 import AdminPanel from "./components/admin/AdminPanel";
 import AuthManager from "./components/auth/AuthManager";
+import ToggleButton from "./components/common/ToggleButton";
+import AiAssistantLink from "./components/common/AiAssistantLink";
 import SelectionDisplay from "./components/settings/SelectionDisplay";
 import SettingsButton from "./components/settings/SettingsButton";
 import StatsPanel from "./components/stats/StatsPanel";
@@ -17,6 +19,8 @@ import {
   UserCircle,
   Save,
 } from "lucide-react";
+
+import InstallButton from "./components/install/installButton";
 import React, { useState, useEffect, useRef } from "react";
 
 console.log("Firebase Auth initialized:", !!auth);
@@ -54,6 +58,11 @@ interface QuestionFile {
 interface StructureFile {
   TOPICS: TopicStructure[];
   LEVELS: LevelStructure[];
+}
+interface AiLinkProps {
+  question: string;
+  type: "perplexity" | "claude" | "gemini"; // Ajout de 'gemini'
+  className?: string;
 }
 
 interface PlayerData {
@@ -93,6 +102,8 @@ const QuizApp: React.FC = () => {
   const questionCardRef = useRef<HTMLDivElement>(null);
   const answerSectionRef = useRef<HTMLDivElement>(null);
   const playersGridRef = useRef<HTMLDivElement>(null);
+  const [themePanelExpanded, setThemePanelExpanded] = useState(true);
+  const [levelPanelExpanded, setLevelPanelExpanded] = useState(true);
 
   const [players, setPlayers] = useState<PlayerData[]>([
     {
@@ -490,6 +501,7 @@ const QuizApp: React.FC = () => {
           <h1 className="quiz-title">Quiz Éducatif</h1>
         </div>
         <div className="flex items-center gap-2">
+          <InstallButton />
           <SettingsButton
             onAdminClick={() => {
               setShowAuthModal(false);
@@ -528,195 +540,227 @@ const QuizApp: React.FC = () => {
       )}
 
       <div className="grid md:grid-cols-2 gap-6 mb-6">
-        <div className="section" ref={topicsRef}>
+        <div
+          className={`section ${
+            !themePanelExpanded ? "section-collapsed" : ""
+          }`}
+          ref={topicsRef}
+        >
           <div className="section-header">
             <h2 className="section-title">Gestion des Thèmes</h2>
-          </div>
-
-          <button onClick={resetTopics} className="reset-button">
-            <RotateCcw size={18} />
-            <span>Réinitialiser les thèmes</span>
-          </button>
-
-          <div className="select-container">
-            <label className="select-label">
-              Thèmes principaux{" "}
-              <ChevronDown size={14} className="inline ml-1" />
-            </label>
-            <select
-              multiple
-              value={selectedMainTopics}
-              onChange={(e) => {
-                const selectedValues = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value
-                );
-                handleTopicSelection("mainTopics", selectedValues);
-              }}
-              className="resize-select"
-            >
-              {getUniqueOptions("main-topic", "topics").map((topic) => (
-                <option key={String(topic)} value={String(topic)}>
-                  {topic}
-                </option>
-              ))}
-            </select>
-            <SelectionDisplay
-              selections={selectedMainTopics}
-              className="selection-display-mobile"
+            <ToggleButton
+              isExpanded={themePanelExpanded}
+              onClick={() => setThemePanelExpanded(!themePanelExpanded)}
             />
           </div>
+          <div className="section-content">
+            <button onClick={resetTopics} className="reset-button">
+              <RotateCcw size={18} />
+              <span>Réinitialiser les thèmes</span>
+            </button>
 
-          <div className="select-container">
-            <label className="select-label">
-              Sous-thèmes <ChevronDown size={14} className="inline ml-1" />
-            </label>
-            <select
-              multiple
-              value={selectedSubTopics}
-              onChange={(e) => {
-                const selectedValues = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value
-                );
-                handleTopicSelection("subTopics", selectedValues);
-              }}
-              className="resize-select"
-            >
-              {getUniqueOptions("subtopic", "topics").map((subtopic) => (
-                <option key={String(subtopic)} value={String(subtopic)}>
-                  {subtopic}
-                </option>
-              ))}
-            </select>
-            <SelectionDisplay
-              selections={selectedSubTopics}
-              className="selection-display-mobile"
-            />
-          </div>
+            <div className="select-container">
+              <label className="select-label">
+                Thèmes principaux{" "}
+                <ChevronDown size={14} className="inline ml-1" />
+              </label>
+              <select
+                multiple
+                value={selectedMainTopics}
+                onChange={(e) => {
+                  const selectedValues = Array.from(
+                    e.target.selectedOptions,
+                    (option) => option.value
+                  );
+                  handleTopicSelection("mainTopics", selectedValues);
+                }}
+                className="resize-select"
+              >
+                {getUniqueOptions("main-topic", "topics").map((topic) => (
+                  <option key={String(topic)} value={String(topic)}>
+                    {topic}
+                  </option>
+                ))}
+              </select>
+              <SelectionDisplay
+                selections={selectedMainTopics}
+                className="selection-display-mobile"
+              />
+            </div>
 
-          <div className="select-container">
-            <label className="select-label">
-              Sous-sous-thèmes <ChevronDown size={14} className="inline ml-1" />
-            </label>
-            <select
-              multiple
-              value={selectedSubSubTopics}
-              onChange={(e) => {
-                const selectedValues = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value
-                );
-                handleTopicSelection("subSubTopics", selectedValues);
-              }}
-              className="resize-select"
-            >
-              {getUniqueOptions("sub-subtopic", "topics").map((subSubTopic) => (
-                <option key={String(subSubTopic)} value={String(subSubTopic)}>
-                  {subSubTopic}
-                </option>
-              ))}
-            </select>
-            <SelectionDisplay
-              selections={selectedSubSubTopics}
-              className="selection-display-mobile"
-            />
+            <div className="select-container">
+              <label className="select-label">
+                Sous-thèmes <ChevronDown size={14} className="inline ml-1" />
+              </label>
+              <select
+                multiple
+                value={selectedSubTopics}
+                onChange={(e) => {
+                  const selectedValues = Array.from(
+                    e.target.selectedOptions,
+                    (option) => option.value
+                  );
+                  handleTopicSelection("subTopics", selectedValues);
+                }}
+                className="resize-select"
+              >
+                {getUniqueOptions("subtopic", "topics").map((subtopic) => (
+                  <option key={String(subtopic)} value={String(subtopic)}>
+                    {subtopic}
+                  </option>
+                ))}
+              </select>
+              <SelectionDisplay
+                selections={selectedSubTopics}
+                className="selection-display-mobile"
+              />
+            </div>
+
+            <div className="select-container">
+              <label className="select-label">
+                Sous-sous-thèmes{" "}
+                <ChevronDown size={14} className="inline ml-1" />
+              </label>
+              <select
+                multiple
+                value={selectedSubSubTopics}
+                onChange={(e) => {
+                  const selectedValues = Array.from(
+                    e.target.selectedOptions,
+                    (option) => option.value
+                  );
+                  handleTopicSelection("subSubTopics", selectedValues);
+                }}
+                className="resize-select"
+              >
+                {getUniqueOptions("sub-subtopic", "topics").map(
+                  (subSubTopic) => (
+                    <option
+                      key={String(subSubTopic)}
+                      value={String(subSubTopic)}
+                    >
+                      {subSubTopic}
+                    </option>
+                  )
+                )}
+              </select>
+              <SelectionDisplay
+                selections={selectedSubSubTopics}
+                className="selection-display-mobile"
+              />
+            </div>
           </div>
         </div>
 
-        <div className="section" ref={levelsRef}>
+        <div
+          className={`section ${
+            !levelPanelExpanded ? "section-collapsed" : ""
+          }`}
+          ref={levelsRef}
+        >
           <div className="section-header">
             <h2 className="section-title">Gestion des Niveaux</h2>
-          </div>
-
-          <button onClick={resetLevels} className="reset-button">
-            <RotateCcw size={18} />
-            <span>Réinitialiser les niveaux</span>
-          </button>
-
-          <div className="select-container">
-            <label className="select-label">
-              Niveaux principaux{" "}
-              <ChevronDown size={14} className="inline ml-1" />
-            </label>
-            <select
-              multiple
-              value={selectedMainLevels.map(String)}
-              onChange={(e) => {
-                const selectedValues = Array.from(
-                  e.target.selectedOptions,
-                  (option) => parseInt(option.value)
-                );
-                handleLevelSelection("mainLevels", selectedValues);
-              }}
-              className="resize-select"
-            >
-              {getUniqueOptions("main-level", "levels").map((level) => (
-                <option key={String(level)} value={String(level)}>
-                  {level}
-                </option>
-              ))}
-            </select>
-            <SelectionDisplay
-              selections={selectedMainLevels.map(String)}
-              className="selection-display-mobile"
+            <ToggleButton
+              isExpanded={levelPanelExpanded}
+              onClick={() => setLevelPanelExpanded(!levelPanelExpanded)}
             />
           </div>
-          <div className="select-container">
-            <label className="select-label">
-              Sous-niveaux <ChevronDown size={14} className="inline ml-1" />
-            </label>
-            <select
-              multiple
-              value={selectedSubLevels}
-              onChange={(e) => {
-                const selectedValues = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value
-                );
-                handleLevelSelection("subLevels", selectedValues);
-              }}
-              className="resize-select"
-            >
-              {getUniqueOptions("sublevel", "levels").map((sublevel) => (
-                <option key={String(sublevel)} value={String(sublevel)}>
-                  {sublevel}
-                </option>
-              ))}
-            </select>
-            <SelectionDisplay
-              selections={selectedSubLevels}
-              className="selection-display-mobile"
-            />
-          </div>
+          <div className="section-content">
+            <button onClick={resetLevels} className="reset-button">
+              <RotateCcw size={18} />
+              <span>Réinitialiser les niveaux</span>
+            </button>
 
-          <div className="select-container">
-            <label className="select-label">
-              Sous-sous-niveaux{" "}
-              <ChevronDown size={14} className="inline ml-1" />
-            </label>
-            <select
-              multiple
-              value={selectedSubSubLevels}
-              onChange={(e) => {
-                const selectedValues = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value
-                );
-                handleLevelSelection("subSubLevels", selectedValues);
-              }}
-              className="resize-select"
-            >
-              {getUniqueOptions("sub-sublevel", "levels").map((subSubLevel) => (
-                <option key={String(subSubLevel)} value={String(subSubLevel)}>
-                  {subSubLevel}
-                </option>
-              ))}
-            </select>
-            <SelectionDisplay
-              selections={selectedSubSubLevels}
-              className="selection-display-mobile"
-            />
+            <div className="select-container">
+              <label className="select-label">
+                Niveaux principaux{" "}
+                <ChevronDown size={14} className="inline ml-1" />
+              </label>
+              <select
+                multiple
+                value={selectedMainLevels.map(String)}
+                onChange={(e) => {
+                  const selectedValues = Array.from(
+                    e.target.selectedOptions,
+                    (option) => parseInt(option.value)
+                  );
+                  handleLevelSelection("mainLevels", selectedValues);
+                }}
+                className="resize-select"
+              >
+                {getUniqueOptions("main-level", "levels").map((level) => (
+                  <option key={String(level)} value={String(level)}>
+                    {level}
+                  </option>
+                ))}
+              </select>
+              <SelectionDisplay
+                selections={selectedMainLevels.map(String)}
+                className="selection-display-mobile"
+              />
+            </div>
+
+            <div className="select-container">
+              <label className="select-label">
+                Sous-niveaux <ChevronDown size={14} className="inline ml-1" />
+              </label>
+              <select
+                multiple
+                value={selectedSubLevels}
+                onChange={(e) => {
+                  const selectedValues = Array.from(
+                    e.target.selectedOptions,
+                    (option) => option.value
+                  );
+                  handleLevelSelection("subLevels", selectedValues);
+                }}
+                className="resize-select"
+              >
+                {getUniqueOptions("sublevel", "levels").map((sublevel) => (
+                  <option key={String(sublevel)} value={String(sublevel)}>
+                    {sublevel}
+                  </option>
+                ))}
+              </select>
+              <SelectionDisplay
+                selections={selectedSubLevels}
+                className="selection-display-mobile"
+              />
+            </div>
+
+            <div className="select-container">
+              <label className="select-label">
+                Sous-sous-niveaux{" "}
+                <ChevronDown size={14} className="inline ml-1" />
+              </label>
+              <select
+                multiple
+                value={selectedSubSubLevels}
+                onChange={(e) => {
+                  const selectedValues = Array.from(
+                    e.target.selectedOptions,
+                    (option) => option.value
+                  );
+                  handleLevelSelection("subSubLevels", selectedValues);
+                }}
+                className="resize-select"
+              >
+                {getUniqueOptions("sub-sublevel", "levels").map(
+                  (subSubLevel) => (
+                    <option
+                      key={String(subSubLevel)}
+                      value={String(subSubLevel)}
+                    >
+                      {subSubLevel}
+                    </option>
+                  )
+                )}
+              </select>
+              <SelectionDisplay
+                selections={selectedSubSubLevels}
+                className="selection-display-mobile"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -850,7 +894,12 @@ const QuizApp: React.FC = () => {
                       <h3 className="answer-title">Explication</h3>
                       <p>{randomQuestion.explanation}</p>
 
-                      <div className="flex gap-3 mt-4">
+                      {/* Ajout des liens AI Assistant */}
+                      <div className="flex justify-center mt-6 mb-6">
+                        <AiAssistantLink question={randomQuestion.question} />
+                      </div>
+
+                      <div className="validation-buttons-container">
                         <button
                           onClick={() => handleAnswerValidation(true)}
                           className="validation-button-success"
