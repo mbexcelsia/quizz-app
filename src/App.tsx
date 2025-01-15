@@ -501,7 +501,6 @@ const QuizApp: React.FC = () => {
           <h1 className="quiz-title">Quiz Éducatif</h1>
         </div>
         <div className="flex items-center gap-2">
-          <InstallButton />
           <SettingsButton
             onAdminClick={() => {
               setShowAuthModal(false);
